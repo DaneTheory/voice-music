@@ -4,3 +4,9 @@ if (!String.prototype.startsWith) {
     return this.indexOf(searchString, position) === position;
   };
 }
+
+if (!String.prototype.iStartsWith) {
+  String.prototype.iStartsWith = function(searchString, position) {
+    return this.toLowerCase().startsWith(searchString.toLowerCase(), position);
+  };
+}

@@ -1,4 +1,6 @@
 var twilio = require('twilio');
+var Promise = require('bluebird');
+
 var contacts = require('./contacts');
 
 function getUser(req) {
@@ -9,21 +11,38 @@ function getUser(req) {
   };
 }
 
+function isTwimlResponse(response) {
+  return response.constructor.name == 'Node';
+}
+
+function respond(res, result) {
+  if (result instanceof Promise) {
+    result
+    .then(function(response) { respond(res, response); })
+    .catch(function() { res.end(); });
+  } else if (isTwimlResponse(result)) {
+    res.send(result.toString());
+  } else if (typeof result == 'string') {
+    sendTwimlSms(res, result);
+  } else {
+    res.end();
+  }
+}
+
+function sendTwimlSms(res, msg) {
+  var twimlResponse = new twilio.TwimlResponse();
+  twimlResponse.message(msg);
+
+  res.set('Content-Type', 'text/html');
+  res.send(twimlResponse.toString());
+}
+
 module.exports = {
-  /**
-   * How to use:
-   * app.get('/path', twiml.Responder(function(res, req) {
-   *   res.say('...').play('...');
-   * }));
-   */
   Responder: function(fn) {
     return function(req, res) {
       req.user = getUser(req);
-      var twimlResponse = new twilio.TwimlResponse();
-      fn(twimlResponse, req);
-
-      res.set('Content-Type', 'text/html');
-      res.send(twimlResponse.toString());
+      var result = fn(req);
+      respond(res, result);
     };
   },
 };
