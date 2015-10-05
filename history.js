@@ -1,4 +1,5 @@
-const MAX = 5;
+const MAX_SEARCHES = 5;
+const MAX_RESULTS = 5;
 var entries = {};
 
 const Types = {
@@ -25,11 +26,11 @@ module.exports = {
   },
 
   getSearches: function() {
-    return getEntriesOfType(Types.SEARCHES).slice(0, MAX);
+    return getEntriesOfType(Types.SEARCHES).slice(0, MAX_SEARCHES);
   },
 
   getResults: function(query) {
-    return (getEntriesOfType(Types.RESULTS)[query] || []).slice(0);
+    return (getEntriesOfType(Types.RESULTS)[query] || []).slice(0, MAX_RESULTS);
   },
 
   clear: function(type) {

@@ -2,6 +2,7 @@ var Promise = require('bluebird');
 var twilio = require('twilio');
 var util = require('util');
 
+var soundCloud = require('./sound-cloud');
 var history = require('./history');
 
 const HOST = 'http://voice-music.herokuapp.com';
@@ -10,22 +11,17 @@ const AUTH_TOKEN = 'bea6081ce8b239386f01fd20a59d1de8';
 
 var client = new twilio.RestClient(ACCOUNT_SID, AUTH_TOKEN);
 
-var MOCK_RESULTS = [
-  {name: 'Rihanna Diamonds', src: 'https://www.dropbox.com/s/ab1n6qs94fo31v8/Rihanna_Diamonds.mp3?dl=1'},
-  {name: 'Rihanna Only Girl', src: 'https://www.dropbox.com/s/33vrfjq8qzau5lx/Rihanna_Only_Girl.mp3?dl=1'},
-  {name: 'Rihanna Stay', src: 'https://www.dropbox.com/s/tvevmiyq7vn50rj/Rihanna_Stay.mp3?dl=1'},
-];
-
 var commands = {
   'Search for': function(cmd, req, succ, err) {
     history.addSearch(cmd);
-    // Do the actual search, and add results to the history.
-    var results = MOCK_RESULTS;
-    history.addResults(cmd, results);
-    var parts = results.map(function(r, i) {
-      return util.format('%d. %s', i + 1, r.name);
-    });
-    succ(parts.join('\n'));
+    soundCloud.search(cmd).then(function(results) {
+      history.addResults(cmd, results);
+      var parts = history.getResults(cmd).map(function(r, i) {
+        return util.format('%d. %s', i + 1, r.name);
+      });
+      succ(parts.join('\n'));
+    }).catch(err);
+
   },
   'Play': function(cmd, req, succ, err) {
     var query = history.getSearches().shift();
