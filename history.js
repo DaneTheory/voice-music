@@ -1,11 +1,12 @@
 const MAX_SEARCHES = 5;
 const MAX_RESULTS = 5;
-var entries = {};
 
 const Types = {
   SEARCHES: 'searches',
   RESULTS: 'results',
 };
+
+var entries = {};
 
 function getEntriesOfType(type) {
   entries[type] = entries[type] || [];
@@ -13,7 +14,6 @@ function getEntriesOfType(type) {
 }
 
 module.exports = {
-
   addSearch: function(query) {
     getEntriesOfType(Types.SEARCHES).unshift(query);
     return this;

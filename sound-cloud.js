@@ -4,7 +4,6 @@ var util = require('util');
 
 const SC_URL = 'http://api.soundcloud.com/tracks';
 const CLIENT_ID = 'ed292956bbac43c1bdb9147ad764d61f';
-const CLIENT_SECRET = '52f602b2908784b97c99c559ae06360a';
 
 function processResult(result) {
   return {

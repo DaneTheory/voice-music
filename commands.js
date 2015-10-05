@@ -30,8 +30,9 @@ var commands = {
       to: req.user.id,
       from: req.query.To, // The Twilio number.
       url: util.format('%s/play?q=%s&num=%d', HOST, encodeURIComponent(query), num),
-    });
-    succ('Playing...');
+    }).then(function() {
+      succ('Playing...');
+    }).catch(err);
   },
 };
 

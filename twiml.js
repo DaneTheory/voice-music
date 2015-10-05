@@ -19,7 +19,7 @@ function respond(res, result) {
   if (result instanceof Promise) {
     result
     .then(function(response) { respond(res, response); })
-    .catch(function() { res.end(); });
+    .catch(function() { error(res); });
   } else if (isTwimlResponse(result)) {
     res.send(result.toString());
   } else if (typeof result == 'string') {
@@ -35,6 +35,10 @@ function sendTwimlSms(res, msg) {
 
   res.set('Content-Type', 'text/html');
   res.send(twimlResponse.toString());
+}
+
+function error(res) {
+  sendTwimlSms(res, 'Something wrong happened :(');
 }
 
 module.exports = {
