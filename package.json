@@ -1,0 +1,20 @@
+{
+  "name": "voice-music",
+  "version": "0.0.1",
+  "description": "Play music through phone calls",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "express": "4.13.3",
+    "twilio": "~2.4.0"
+  },
+  "engines": {
+    "node": "0.10.25"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mdebbar/voice-music"
+  }
+}
